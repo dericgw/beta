@@ -14,12 +14,12 @@ const NoPreviousShares = styled.div`
 
 const PreviousShares = ({ previousShares }) =>
   previousShares ? (
-    previousShares.map(({ id, recipient, name, hasBeenViewed }) => (
+    previousShares.map(({ id, recipient, title, hasBeenViewed }) => (
       <PreviousShare
         key={id}
         id={id}
         recipient={recipient}
-        name={name}
+        title={title}
         hasBeenViewed={hasBeenViewed}
       />
     ))

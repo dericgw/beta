@@ -10,12 +10,33 @@ import Menu from './components/menu';
 
 const store = new RootStore();
 
+const previousShares = [
+  {
+    id: 1,
+    title: 'Lost Forever',
+    recipient: 'deric.cain@gmail.com',
+    hasBeenViewed: true,
+  },
+  {
+    id: 2,
+    title: 'Win Again',
+    recipient: 'deric.cain@gmail.com',
+    hasBeenViewed: false,
+  },
+  {
+    id: 3,
+    title: 'It will happen again',
+    recipient: 'deric.cain@gmail.com',
+    hasBeenViewed: false,
+  },
+];
+
 const App = () => (
   <>
     <Menu />
     <Wrapper>
       <Sidebar>
-        <PreviousShares />
+        <PreviousShares previousShares={previousShares} />
       </Sidebar>
       <Provider store={store}>
         <Main>

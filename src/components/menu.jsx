@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { Colors, Menu as BMenu, Icon, Popover, PopoverPosition } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
-const Opener = styled.div`
-  position: fixed;
+const Opener = styled.span`
+  position: absolute;
   right: 42px;
   top: 42px;
   height: 42px;

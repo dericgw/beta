@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import styled from 'styled-components';
-import { Colors } from '@blueprintjs/core';
+import { Colors, ProgressBar } from '@blueprintjs/core';
+import * as firebase from 'firebase/app';
 
 const DropZone = styled.div.attrs({
   'data-test-id': 'upload-drop-zone',
@@ -19,18 +20,30 @@ const DefaultState = styled.div``;
 const DragState = styled(DefaultState)``;
 
 const Upload = () => {
+  const [progress, updateProgress] = useState(0);
   const onDrop = useCallback((acceptedFiles) => {
-    console.log(acceptedFiles);
+    const storage = firebase.storage().ref();
 
-    const fileReader = new FileReader();
-    fileReader.onload = () => {
-      console.log(fileReader);
-    };
-
-    acceptedFiles.forEach((file) => fileReader.readAsBinaryString(file));
+    acceptedFiles.forEach((file) => {
+      const task = storage.child(`songs/${file.name}`).put(file);
+      task.on(
+        'state_changed',
+        (snapshot) => {
+          const percentage =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * (1 / acceptedFiles.length);
+          updateProgress(percentage);
+        },
+        (error) => {
+          throw error;
+        },
+        () => {
+          updateProgress(0);
+        },
+      );
+    });
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: 'audio/*' });
 
   return (
     <DropZone isDragActive={isDragActive} {...getRootProps()}>
@@ -40,6 +53,7 @@ const Upload = () => {
       ) : (
         <DefaultState>Drop music files here to share</DefaultState>
       )}
+      {Number(progress) !== 0 && <ProgressBar value={progress} />}
     </DropZone>
   );
 };
