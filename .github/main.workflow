@@ -8,7 +8,7 @@ action "Install" {
   args = "install"
 }
 
-actions "Build" {
+action "Build" {
   needs = "Install"
   uses = "nuxt/actions-yarn@master"
   args = "build"
