@@ -2,12 +2,14 @@ import React, { lazy, Suspense } from 'react';
 import { Router } from '@reach/router';
 import { Spinner } from '@blueprintjs/core';
 
-const Share = lazy(() => import(/* webpackChunkName: "share" */ './share'));
+const ProtectedRoutes = lazy(() => import(/* webpackChunkName: "protected" */ './protected'));
+const Login = lazy(() => import(/* webpackChunkName: "login" */ './login'));
 
 const Routes = () => (
   <Suspense fallback={<Spinner />}>
     <Router>
-      <Share path="/" />
+      <Login path="/" />
+      <ProtectedRoutes path="/*" />
     </Router>
   </Suspense>
 );
