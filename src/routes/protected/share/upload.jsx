@@ -1,35 +1,20 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import Dropzone from 'react-dropzone';
-import styled from 'styled-components';
-import { Button, Colors, Intent, ProgressBar } from '@blueprintjs/core';
 import * as firebase from 'firebase/app';
-import { IconNames } from '@blueprintjs/icons';
-
-const Wrapper = styled.div`
-  height: 400px;
-  width: 400px;
-  background-color: ${({ isDragActive }) => (isDragActive ? Colors.BLUE5 : Colors.LIGHT_GRAY5)};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const DefaultState = styled.div``;
-
-const DragState = styled(DefaultState)``;
+import { CompletedState, DefaultState, DragState, UploadingState } from './styles';
 
 @inject('shares', 'user')
 @observer
 class Upload extends Component {
   state = {
     progress: 0,
-    task: null,
+    task: 1,
+    completed: false,
   };
 
   onDrop = acceptedFiles => {
     const storage = firebase.storage().ref();
-
     acceptedFiles.forEach(file => {
       this.setState({ task: storage.child(`songs/${this.props.user.id}/${file.name}`).put(file) });
       this.state.task.on(
@@ -43,7 +28,7 @@ class Upload extends Component {
           throw error;
         },
         () => {
-          this.setState({ progress: 0, task: null });
+          this.setState({ progress: 0, task: null, completed: true });
         },
       );
     });
@@ -55,27 +40,32 @@ class Upload extends Component {
   };
 
   render() {
-    const { progress, task } = this.state;
+    const { progress, task, completed } = this.state;
     return (
-      <Dropzone onDrop={this.onDrop} accept="audio/*">
-        {({ getRootProps, getInputProps, isDragActive }) => (
-          <Wrapper isDragActive={isDragActive} {...getRootProps()}>
-            <input {...getInputProps()} />
-            {isDragActive ? (
-              <DragState>Drop the files here ...</DragState>
-            ) : (
-              <DefaultState>
-                Drop music files here to share
-                {task ? (
-                  <Button intent={Intent.DANGER} icon={IconNames.STOP} onClick={this.cancelUpload}>
-                    Cancel
-                  </Button>
-                ) : null}
-              </DefaultState>
-            )}
-            {Number(progress) !== 0 && <ProgressBar value={progress} />}
-          </Wrapper>
-        )}
+      <Dropzone
+        disabled={Boolean(progress || task || completed)}
+        onDrop={this.onDrop}
+        accept="audio/*"
+        multiple={false}
+      >
+        {({ getRootProps, getInputProps, isDragActive }) =>
+          isDragActive ? (
+            <DragState />
+          ) : task ? (
+            <UploadingState progress={progress} cancel={this.cancelUpload} fileName="The Way.mp3" />
+          ) : completed ? (
+            <CompletedState
+              link="http://testing.com/1234"
+              fileName="The Way.mp3"
+              copyLinkToClipboard={() => {}}
+              viewShare={() => {}}
+            />
+          ) : (
+            <DefaultState {...getRootProps()}>
+              <input {...getInputProps()} />
+            </DefaultState>
+          )
+        }
       </Dropzone>
     );
   }

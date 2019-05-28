@@ -7,7 +7,7 @@ const Login = lazy(() => import(/* webpackChunkName: "login" */ './login'));
 
 const Routes = () => (
   <Suspense fallback={<Spinner />}>
-    <Router>
+    <Router className="router">
       <Login path="/" />
       <ProtectedRoutes path="/*" />
     </Router>

@@ -13,8 +13,9 @@ export const Sidebar = styled.aside`
 `;
 
 export const Main = styled.section`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px;
+  .router {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;

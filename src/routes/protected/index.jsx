@@ -38,7 +38,7 @@ const ProtectedRoutes = ({ user }) =>
           <PreviousShares previousShares={previousShares} />
         </Sidebar>
         <Main>
-          <Router>
+          <Router className="router">
             <Share path="share" />
           </Router>
         </Main>
