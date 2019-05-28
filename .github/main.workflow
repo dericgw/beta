@@ -18,7 +18,7 @@ action "Deploy" {
   needs = "Build"
   uses = "w9jds/firebase-action@master"
   secrets = ["FIREBASE_TOKEN"]
-  args = "deploy --only hosting:prod"
+  args = "deploy --only hosting"
   env = {
     REACT_APP_FIREBASE_API_KEY = "AIzaSyAIDX8oREJNqYOTEmRLEWpLRrtu313HU4c"
     REACT_APP_FIREBASE_AUTH_DOMAIN = "the-beta-project.firebaseapp.com"
