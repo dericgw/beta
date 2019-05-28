@@ -1,13 +1,21 @@
-import { observable, action } from 'mobx';
+import { types } from 'mobx-state-tree';
 
-import Share from '../models/share';
+const Share = types.model('Share', {
+  id: types.identifier,
+  title: types.string,
+  recipient: types.string,
+  link: types.string,
+  hasBeenViewed: types.boolean,
+});
 
-class Shares {
-  @observable shares = [];
+const ShareStore = types
+  .model('ShareStore', {
+    shares: types.array(Share),
+  })
+  .actions(self => ({
+    create(share) {
+      self.shares.push(Share.create(share));
+    },
+  }));
 
-  @action create(share) {
-    this.shares.push(new Share(share));
-  }
-}
-
-export default Shares;
+export default ShareStore;

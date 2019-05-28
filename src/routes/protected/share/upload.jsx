@@ -4,7 +4,7 @@ import Dropzone from 'react-dropzone';
 import * as firebase from 'firebase/app';
 import { CompletedState, DefaultState, DragState, UploadingState } from './styles';
 
-@inject('shares', 'user')
+@inject('store')
 @observer
 class Upload extends Component {
   state = {

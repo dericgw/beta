@@ -12,13 +12,13 @@ const authConfig = {
   ],
 };
 
-@inject('user')
+@inject('store')
 @observer
 class Login extends Component {
   unregisterAuthObserver = () => {};
 
   componentDidMount() {
-    this.unregisterAuthObserver = this.props.user.watchAuthState();
+    this.unregisterAuthObserver = this.props.store.userStore.watchAuthState();
   }
 
   componentWillUnmount() {
@@ -26,11 +26,11 @@ class Login extends Component {
   }
 
   render() {
-    const { user } = this.props;
+    const { store } = this.props;
 
-    console.log(user);
+    console.log(store);
 
-    return user.isAuthed ? (
+    return store.userStore.isAuthed ? (
       <Redirect to="/share" noThrow />
     ) : (
       <StyledFirebaseAuth uiConfig={authConfig} firebaseAuth={firebase.auth()} />

@@ -29,8 +29,8 @@ const previousShares = [
   },
 ];
 
-const ProtectedRoutes = ({ user }) =>
-  user.isAuthed ? (
+const ProtectedRoutes = ({ store: { userStore } }) =>
+  userStore.isAuthed ? (
     <>
       <Menu />
       <Wrapper>
@@ -48,4 +48,4 @@ const ProtectedRoutes = ({ user }) =>
     <Redirect to="/" noThrow />
   );
 
-export default inject('user')(observer(ProtectedRoutes));
+export default inject('store')(observer(ProtectedRoutes));
