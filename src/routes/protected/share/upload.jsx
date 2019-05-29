@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observer, inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import Dropzone from 'react-dropzone';
 import * as firebase from 'firebase/app';
 import { CompletedState, DefaultState, DragState, UploadingState } from './styles';
@@ -14,9 +14,10 @@ class Upload extends Component {
   };
 
   onDrop = acceptedFiles => {
+    const { userStore } = this.props.store;
     const storage = firebase.storage().ref();
     acceptedFiles.forEach(file => {
-      this.setState({ task: storage.child(`songs/${this.props.user.id}/${file.name}`).put(file) });
+      this.setState({ task: storage.child(`songs/${userStore.user.uid}/${file.name}`).put(file) });
       this.state.task.on(
         'state_changed',
         snapshot => {

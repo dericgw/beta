@@ -26,11 +26,9 @@ class Login extends Component {
   }
 
   render() {
-    const { store } = this.props;
+    const { userStore } = this.props.store;
 
-    console.log(store);
-
-    return store.userStore.isAuthed ? (
+    return userStore.isAuthed && userStore.attemptAuth ? (
       <Redirect to="/share" noThrow />
     ) : (
       <StyledFirebaseAuth uiConfig={authConfig} firebaseAuth={firebase.auth()} />

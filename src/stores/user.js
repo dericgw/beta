@@ -1,8 +1,9 @@
 import { types } from 'mobx-state-tree';
 import * as firebase from 'firebase/app';
+import pick from 'lodash/pick';
 
 const User = types.model('User', {
-  id: types.identifier,
+  uid: types.identifier,
   displayName: types.string,
   email: types.string,
 });
@@ -17,10 +18,16 @@ const UserStore = types
     },
   }))
   .actions(self => ({
+    attemptAuth() {
+      const user = firebase.auth().currentUser;
+      if (user) {
+        self.update(user);
+      }
+
+      return self.isAuthed;
+    },
     update(user) {
-      self.user.id = user.uid;
-      self.user.email = user.email;
-      self.user.displayName = user.displayName;
+      self.user = User.create(pick(user, ['uid', 'displayName', 'email']));
     },
     watchAuthState() {
       return firebase.auth().onAuthStateChanged(user => {
