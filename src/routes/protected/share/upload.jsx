@@ -1,50 +1,25 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import Dropzone from 'react-dropzone';
-import * as firebase from 'firebase/app';
 import { CompletedState, DefaultState, DragState, UploadingState } from './styles';
 
 @inject('store')
 @observer
 class Upload extends Component {
-  state = {
-    progress: 0,
-    task: 1,
-    completed: false,
-  };
-
   onDrop = acceptedFiles => {
-    const { userStore } = this.props.store;
-    const storage = firebase.storage().ref();
-    acceptedFiles.forEach(file => {
-      this.setState({ task: storage.child(`songs/${userStore.user.uid}/${file.name}`).put(file) });
-      this.state.task.on(
-        'state_changed',
-        snapshot => {
-          const percentage =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * (1 / acceptedFiles.length);
-          this.setState({ progress: percentage });
-        },
-        error => {
-          throw error;
-        },
-        () => {
-          this.setState({ progress: 0, task: null, completed: true });
-        },
-      );
-    });
+    const { userStore, shareStore } = this.props.store;
+    shareStore.upload(acceptedFiles, userStore.user.uid);
   };
 
   cancelUpload = () => {
-    this.state.task.cancel();
-    this.setState({ task: null });
+    this.props.store.shareStore.cancelUpload();
   };
 
   render() {
-    const { progress, task, completed } = this.state;
+    const { uploadProgress, uploadCompleted } = this.props.store.shareStore;
     return (
       <Dropzone
-        disabled={Boolean(progress || task || completed)}
+        disabled={Boolean(uploadProgress || uploadCompleted)}
         onDrop={this.onDrop}
         accept="audio/*"
         multiple={false}
@@ -52,9 +27,13 @@ class Upload extends Component {
         {({ getRootProps, getInputProps, isDragActive }) =>
           isDragActive ? (
             <DragState />
-          ) : task ? (
-            <UploadingState progress={progress} cancel={this.cancelUpload} fileName="The Way.mp3" />
-          ) : completed ? (
+          ) : uploadProgress ? (
+            <UploadingState
+              progress={uploadProgress}
+              cancel={this.cancelUpload}
+              fileName="The Way.mp3"
+            />
+          ) : uploadCompleted ? (
             <CompletedState
               link="http://testing.com/1234"
               fileName="The Way.mp3"

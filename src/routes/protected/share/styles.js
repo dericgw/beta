@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 import { Button, Colors, Icon, Intent, ProgressBar } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
@@ -45,25 +45,25 @@ const StyledErrorState = styled(StyledDefaultState)`
   background-color: ${Colors.RED5};
 `;
 
-export const DefaultState = () => (
-  <StyledDefaultState>
+export const DefaultState = forwardRef((props, ref) => (
+  <StyledDefaultState ref={ref} {...props}>
     <h4>Drop a music file here to share</h4>
     <p>
       (Or, just click here to search for a file. Upload starts automatically when files are added.)
     </p>
     <Icon icon={IconNames.MUSIC} iconSize={84} />
   </StyledDefaultState>
-);
+));
 
-export const DragState = () => (
-  <StyledDragState>
+export const DragState = forwardRef((props, ref) => (
+  <StyledDragState ref={ref} {...props}>
     <h4>Upload starts automatically when files are added.</h4>
     <Icon icon={IconNames.CLOUD_UPLOAD} iconSize={84} />
   </StyledDragState>
-);
+));
 
-export const UploadingState = ({ progress, cancel, fileName }) => (
-  <StyledUploadingState>
+export const UploadingState = forwardRef(({ progress, cancel, fileName, ...props }, ref) => (
+  <StyledUploadingState ref={ref} {...props}>
     <Icon icon={IconNames.CLOUD_UPLOAD} iconSize={36} />
     <h4>{fileName}</h4>
     <ProgressBar value={progress} />
@@ -71,7 +71,7 @@ export const UploadingState = ({ progress, cancel, fileName }) => (
       Cancel
     </Button>
   </StyledUploadingState>
-);
+));
 
 export const CompletedState = ({ link, fileName, copyLinkToClipboard, viewShare }) => (
   <StyledCompletedState>
