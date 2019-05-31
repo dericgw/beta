@@ -1,6 +1,7 @@
-import React, { lazy } from 'react';
+import React, { lazy, useEffect } from 'react';
 import { Redirect, Router } from '@reach/router';
 import { inject, observer } from 'mobx-react';
+import * as firebase from 'firebase/app';
 
 import Menu from '../../components/menu';
 import { Main, Sidebar, Wrapper } from '../../layout';
@@ -29,13 +30,13 @@ const previousShares = [
   },
 ];
 
-const ProtectedRoutes = ({ store: { userStore } }) =>
-  userStore.isAuthed ? (
+const ProtectedRoutes = ({ store: { userStore, shareStore } }) => {
+  return userStore.isAuthed ? (
     <>
       <Menu />
       <Wrapper>
         <Sidebar>
-          <PreviousShares previousShares={previousShares} />
+          <PreviousShares previousShares={[...shareStore.shares]} />
         </Sidebar>
         <Main>
           <Router className="router">
@@ -47,5 +48,6 @@ const ProtectedRoutes = ({ store: { userStore } }) =>
   ) : (
     <Redirect to="/" noThrow />
   );
+};
 
 export default inject('store')(observer(ProtectedRoutes));

@@ -11,9 +11,10 @@ const Share = types.model('Share', {
 
 const ShareStore = types
   .model('ShareStore', {
-    shares: types.array(Share),
+    shares: types.optional(types.array(Share), []),
     uploadProgress: 0,
     uploadCompleted: false,
+    uploadSongName: types.optional(types.string, ''),
   })
   .actions(self => {
     let uploadTask = null;
@@ -22,36 +23,42 @@ const ShareStore = types
       const db = firebase.firestore();
       try {
         const { id } = await db.collection('songs').add(share);
-        self.shares.push(Share.create({ id, ...share }));
+        self.addShare({ id, ...share });
       } catch (error) {
         throw new Error(error);
       }
     };
 
+    const addShare = share => {
+      self.shares.push(Share.create(share));
+    };
+
     const upload = (files, userId) => {
       const storage = firebase.storage().ref();
+      self.updateUploadCompleted(false);
       files.forEach(file => {
-        const songName = file.name;
-        uploadTask = storage.child(`songs/${userId}/${songName}`).put(file);
+        self.updateUploadSongName(file.name);
+        uploadTask = storage.child(`songs/${userId}/${self.uploadSongName}`).put(file);
 
         uploadTask.on(
           'state_changed',
           snapshot => {
-            self.uploadProgress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * (1 / files.length);
+            self.updateUploadProgress(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * (1 / files.length),
+            );
           },
           error => {
             throw error;
           },
           async () => {
-            self.uploadProgress = 0;
-            self.uploadCompleted = true;
+            self.updateUploadProgress(0);
+            self.updateUploadCompleted(true);
             try {
               const downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();
               self.create({
                 userId,
                 link: downloadUrl,
-                title: songName,
+                title: self.uploadSongName,
                 hasBeenViewed: false,
               });
             } catch (error) {
@@ -68,10 +75,40 @@ const ShareStore = types
       }
     };
 
+    const updateUploadProgress = progress => {
+      self.uploadProgress = progress;
+    };
+
+    const updateUploadCompleted = isComplete => {
+      self.uploadCompleted = isComplete;
+    };
+
+    const updateUploadSongName = name => {
+      self.uploadSongName = name;
+    };
+
+    const fetchShares = userId => {
+      const db = firebase.firestore();
+      db.collection('songs')
+        .where('userId', '==', userId)
+        .onSnapshot(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            const { id } = doc;
+            const { userId, ...share } = doc.data();
+            self.addShare({ id, ...share });
+          });
+        });
+    };
+
     return {
       create,
       upload,
       cancelUpload,
+      updateUploadProgress,
+      updateUploadCompleted,
+      updateUploadSongName,
+      addShare,
+      fetchShares,
     };
   });
 

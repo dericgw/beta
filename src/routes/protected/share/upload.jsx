@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import Dropzone from 'react-dropzone';
+import { ProgressBar } from '@blueprintjs/core';
+
 import { CompletedState, DefaultState, DragState, UploadingState } from './styles';
 
 @inject('store')
@@ -19,33 +21,17 @@ class Upload extends Component {
     const { uploadProgress, uploadCompleted } = this.props.store.shareStore;
     return (
       <Dropzone
-        disabled={Boolean(uploadProgress || uploadCompleted)}
+        // disabled={Boolean(uploadProgress || uploadCompleted)}
         onDrop={this.onDrop}
         accept="audio/*"
         multiple={false}
       >
-        {({ getRootProps, getInputProps, isDragActive }) =>
-          isDragActive ? (
-            <DragState />
-          ) : uploadProgress ? (
-            <UploadingState
-              progress={uploadProgress}
-              cancel={this.cancelUpload}
-              fileName="The Way.mp3"
-            />
-          ) : uploadCompleted ? (
-            <CompletedState
-              link="http://testing.com/1234"
-              fileName="The Way.mp3"
-              copyLinkToClipboard={() => {}}
-              viewShare={() => {}}
-            />
-          ) : (
-            <DefaultState {...getRootProps()}>
-              <input {...getInputProps()} />
-            </DefaultState>
-          )
-        }
+        {({ getRootProps, getInputProps, isDragActive }) => (
+          <DefaultState {...getRootProps({ isDragActive })}>
+            <input {...getInputProps()} />
+            {uploadProgress ? <ProgressBar value={uploadProgress} /> : null}
+          </DefaultState>
+        )}
       </Dropzone>
     );
   }

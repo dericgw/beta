@@ -5,7 +5,7 @@ import RootStore from './stores';
 import Routes from './routes';
 import GlobalStyles from './assets/styles/global';
 
-const store = RootStore.create({ userStore: {} });
+const store = RootStore.create({ userStore: {}, shareStore: {} });
 
 if (process.env.NODE_ENV === 'development') {
   const makeInspectable = require('mobx-devtools-mst').default;

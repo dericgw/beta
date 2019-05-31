@@ -6,11 +6,12 @@ import { IconNames } from '@blueprintjs/icons';
 const StyledDefaultState = styled.div`
   height: 100%;
   width: 100%;
+  padding: 18px 120px;
+  margin: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 18px 120px;
   background-color: ${Colors.WHITE};
   color: ${Colors.DARK_GRAY1};
 
