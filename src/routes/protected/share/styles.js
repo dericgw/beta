@@ -1,19 +1,19 @@
 import React, { forwardRef } from 'react';
 import styled from 'styled-components';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Button, Colors, Icon, Intent, ProgressBar } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
-const StyledDefaultState = styled.div`
-  height: 100%;
-  width: 100%;
-  padding: 18px 120px;
-  margin: 24px;
+export const StyledDefaultState = styled.div`
+  height: 500px;
+  width: 500px;
+  border-radius: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: ${Colors.WHITE};
-  color: ${Colors.DARK_GRAY1};
+  background-color: ${({ isDragActive }) => (isDragActive ? Colors.BLUE5 : Colors.LIGHT_GRAY5)};
+  color: ${({ isDragActive }) => (isDragActive ? Colors.WHITE : Colors.DARK_GRAY1)};
 
   h4 {
     margin-bottom: 12px;
@@ -24,6 +24,8 @@ const StyledDefaultState = styled.div`
     font-size: 15px;
     margin-bottom: 18px;
     line-height: 1.5;
+    max-width: 460px;
+    text-align: center;
   }
 
   svg {
@@ -46,15 +48,15 @@ const StyledErrorState = styled(StyledDefaultState)`
   background-color: ${Colors.RED5};
 `;
 
-export const DefaultState = forwardRef((props, ref) => (
-  <StyledDefaultState ref={ref} {...props}>
+export const DefaultState = props => (
+  <StyledDefaultState {...props}>
     <h4>Drop a music file here to share</h4>
     <p>
       (Or, just click here to search for a file. Upload starts automatically when files are added.)
     </p>
     <Icon icon={IconNames.MUSIC} iconSize={84} />
   </StyledDefaultState>
-));
+);
 
 export const DragState = forwardRef((props, ref) => (
   <StyledDragState ref={ref} {...props}>
@@ -74,15 +76,15 @@ export const UploadingState = forwardRef(({ progress, cancel, fileName, ...props
   </StyledUploadingState>
 ));
 
-export const CompletedState = ({ link, fileName, copyLinkToClipboard, viewShare }) => (
+export const CompletedState = ({ link, fileName, viewShare, id }) => (
   <StyledCompletedState>
     <Icon icon={IconNames.UPDATED} iconSize={36} />
     <h4>{fileName}</h4>
     <p>{link}</p>
-    <Button intent={Intent.DANGER} icon={IconNames.STOP} onClick={copyLinkToClipboard}>
-      Copy
-    </Button>
-    <Button intent={Intent.DANGER} icon={IconNames.STOP} onClick={viewShare}>
+    <CopyToClipboard text={link}>
+      <Button icon={IconNames.DUPLICATE} />
+    </CopyToClipboard>
+    <Button intent={Intent.NONE} icon={IconNames.LINK} onClick={() => viewShare(id)}>
       View
     </Button>
   </StyledCompletedState>

@@ -1,11 +1,9 @@
-import { types } from 'mobx-state-tree';
-
 import UserStore from './user';
-import ShareStore from './shares';
+import SharesStore from './shares';
 
-const RootStore = types.model('RootStore', {
-  userStore: types.optional(UserStore, {}),
-  shareStore: types.optional(ShareStore, {}),
-});
-
-export default RootStore;
+export default class RootStore {
+  constructor() {
+    this.userStore = new UserStore(this);
+    this.sharesStore = new SharesStore(this);
+  }
+}

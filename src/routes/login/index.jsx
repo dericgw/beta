@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { inject, observer } from 'mobx-react';
 import * as firebase from 'firebase/app';
+import noop from 'lodash/noop';
 import { StyledFirebaseAuth } from 'react-firebaseui';
 import { Redirect } from '@reach/router';
 
@@ -12,28 +13,22 @@ const authConfig = {
   ],
 };
 
-@inject('store')
-@observer
-class Login extends Component {
-  unregisterAuthObserver = () => {};
+const Login = ({ store }) => {
+  const { userStore } = store;
+  let unregisterAuthObserver = useRef(noop);
 
-  componentDidMount() {
-    this.unregisterAuthObserver = this.props.store.userStore.watchAuthState();
-  }
+  useEffect(() => {
+    unregisterAuthObserver.current = userStore.watchAuthState();
+    return () => {
+      unregisterAuthObserver.current();
+    };
+  });
 
-  componentWillUnmount() {
-    this.unregisterAuthObserver();
-  }
+  return userStore.isAuthed && userStore.attemptAuth ? (
+    <Redirect to="/share" noThrow />
+  ) : (
+    <StyledFirebaseAuth uiConfig={authConfig} firebaseAuth={firebase.auth()} />
+  );
+};
 
-  render() {
-    const { userStore } = this.props.store;
-
-    return userStore.isAuthed && userStore.attemptAuth ? (
-      <Redirect to="/share" noThrow />
-    ) : (
-      <StyledFirebaseAuth uiConfig={authConfig} firebaseAuth={firebase.auth()} />
-    );
-  }
-}
-
-export default Login;
+export default inject('store')(observer(Login));

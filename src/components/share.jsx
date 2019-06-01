@@ -37,7 +37,7 @@ const StyledPreviousShare = styled(Card)`
   }
 `;
 
-const PreviousShare = ({ id, title, recipient, hasBeenViewed }) => (
+const Share = ({ id, title, recipient, hasBeenViewed }) => (
   <StyledPreviousShare id={id}>
     <div className="info">
       <p className="title">{title}</p>
@@ -53,4 +53,4 @@ const PreviousShare = ({ id, title, recipient, hasBeenViewed }) => (
   </StyledPreviousShare>
 );
 
-export default PreviousShare;
+export default Share;
