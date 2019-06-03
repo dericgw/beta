@@ -6,7 +6,7 @@ import Menu from '../../components/menu';
 import { Main, Sidebar, Wrapper } from '../../layout';
 import Shares from '../../components/shares';
 
-const Share = lazy(() => import(/* webpackChunkName: "share" */ './share'));
+const Share = lazy(() => import(/* webpackChunkName: "share-routes" */ './share'));
 
 const ProtectedRoutes = ({ store: { userStore } }) => {
   return userStore.isAuthed ? (
@@ -18,7 +18,7 @@ const ProtectedRoutes = ({ store: { userStore } }) => {
         </Sidebar>
         <Main>
           <Router className="router">
-            <Share path="share" />
+            <Share path="share/*" />
           </Router>
         </Main>
       </Wrapper>

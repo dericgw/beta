@@ -1,5 +1,4 @@
 import { observable, action, computed } from 'mobx';
-import * as firebase from 'firebase/app';
 import pick from 'lodash/pick';
 
 import User from './models/user';
@@ -9,6 +8,7 @@ export default class UserStore {
 
   constructor(rootStore) {
     this.rootStore = rootStore;
+    this.auth = this.rootStore.firebase.auth;
   }
 
   @computed
@@ -18,7 +18,7 @@ export default class UserStore {
 
   @action
   attemptAuth() {
-    const user = firebase.auth().currentUser;
+    const user = this.auth().currentUser;
     if (user) {
       this.update(user);
     }
@@ -28,12 +28,16 @@ export default class UserStore {
 
   @action
   update(user) {
-    this.user = new User(this, pick(user, ['uid', 'displayName', 'email']));
+    if (!user) {
+      this.user = null;
+    } else {
+      this.user = new User(this, pick(user, ['uid', 'displayName', 'email']));
+    }
   }
 
   @action
   watchAuthState() {
-    return firebase.auth().onAuthStateChanged(user => {
+    return this.auth().onAuthStateChanged(user => {
       if (!!user) {
         this.update(user);
       } else {

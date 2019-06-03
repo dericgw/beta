@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { ContextMenuTarget, Colors, Menu as BMenu, Icon } from '@blueprintjs/core';
+import { Colors, Menu as BMenu, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 const Opener = styled.span`

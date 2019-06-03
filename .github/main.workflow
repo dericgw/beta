@@ -19,7 +19,7 @@ action "Deploy" {
   needs = "Build"
   uses = "w9jds/firebase-action@master"
   secrets = ["FIREBASE_TOKEN"]
-  args = "deploy --only hosting"
+  args = "deploy"
   env = {
     PROJECT_ID = "the-beta-project"
   }

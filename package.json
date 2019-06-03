@@ -5,7 +5,9 @@
   "dependencies": {
     "@blueprintjs/core": "^3.15.1",
     "@blueprintjs/icons": "latest",
+    "@oovui/audio-player-react": "^1.1.1",
     "@reach/router": "^1.2.1",
+    "antd": "^3.19.2",
     "firebase": "^6.0.4",
     "lodash": "^4.17.11",
     "mobx": "^5.9.4",
@@ -21,6 +23,8 @@
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "@craco/craco": "^5.2.1",
+    "babel-plugin-import": "^1.12.0",
+    "craco-antd": "^1.11.0",
     "eslint-config-prettier": "^4.3.0",
     "eslint-plugin-prettier": "^3.1.0",
     "husky": "^2.3.0",

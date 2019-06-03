@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { lazy } from 'react';
+import { Router } from '@reach/router';
 
-import Upload from './upload';
+const Create = lazy(() => import(/* webpackChunkName: "share.create" */ './create'));
 
-const Share = () => <Upload />;
+const ShareRoutes = () => (
+  <Router className="router">
+    <Create path="/" />
+  </Router>
+);
 
-export default Share;
+export default ShareRoutes;

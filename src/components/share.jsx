@@ -1,15 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Icon, Intent, Colors, Card } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Colors } from '@blueprintjs/core';
+import { Icon, Card, List } from 'antd';
+
+const { Meta } = Card;
 
 const StyledPreviousShare = styled(Card)`
-  display: flex;
-  height: 78px;
-  background-color: ${Colors.LIGHT_GRAY3};
-  padding: 12px;
-  margin-bottom: 12px;
-  box-shadow: none;
+  // display: flex;
+  // height: 78px;
+  // background-color: ${Colors.LIGHT_GRAY3};
+  // padding: 12px;
+  // margin-bottom: 12px;
+  // box-shadow: none;
 
   .info {
     display: flex;
@@ -34,22 +36,24 @@ const StyledPreviousShare = styled(Card)`
     flex: 1;
     align-items: center;
     justify-content: flex-end;
+    min-width: 48px;
+    min-height: 48px;
   }
 `;
 
 const Share = ({ id, title, recipient, hasBeenViewed }) => (
   <StyledPreviousShare id={id}>
-    <div className="info">
-      <p className="title">{title}</p>
-      <p className="recipient">{recipient}</p>
-    </div>
-    <div className="icons">
-      {hasBeenViewed ? (
-        <Icon icon={IconNames.EYE_ON} intent={Intent.SUCCESS} />
-      ) : (
-        <Icon icon={IconNames.EYE_OPEN} />
-      )}
-    </div>
+    <Meta
+      avatar={
+        hasBeenViewed ? (
+          <Icon type="eye" theme="twoTone" />
+        ) : (
+          <Icon type="eye-visible" theme="twoTone" />
+        )
+      }
+      title={title}
+      description={recipient}
+    />
   </StyledPreviousShare>
 );
 
