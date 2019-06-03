@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Colors, Menu as BMenu, Icon } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Icon } from 'antd';
+import { Colors } from '@blueprintjs/core';
 
 const Opener = styled.span`
   position: absolute;
@@ -17,23 +17,10 @@ const Opener = styled.span`
 `;
 
 // @ContextMenuTarget
-class Menu extends Component {
-  renderContextMenu() {
-    return (
-      <BMenu>
-        <BMenu.Item text="Log in" />
-        <BMenu.Item text="Log out" />
-      </BMenu>
-    );
-  }
-
-  render() {
-    return (
-      <Opener>
-        <Icon icon={IconNames.MENU} />
-      </Opener>
-    );
-  }
-}
+const Menu = () => (
+  <Opener>
+    <Icon type="menu" />
+  </Opener>
+);
 
 export default Menu;
