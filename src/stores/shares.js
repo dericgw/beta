@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, runInAction } from 'mobx';
 
 import Share from './models/share';
 
@@ -71,30 +71,28 @@ export default class SharesStore {
     this.uploadTask.on(
       'state_changed',
       snapshot => {
-        this.uploadProgress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * (100 / files.length);
+        runInAction(() => {
+          this.uploadProgress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * (100 / files.length);
+        });
       },
       error => {
         throw error;
       },
       () => {
-        this.uploadProgress = 0;
-        this.uploadCompleted = true;
-        this.uploadTask.snapshot.ref
-          .getDownloadURL()
-          .then(downloadUrl => {
-            return this.create({
-              userId,
-              link: downloadUrl,
-              title: this.uploadSongName,
-              hasBeenViewed: false,
-              recipient: null,
-              createdAt: this.rootStore.firebase.firestore.Timestamp.fromDate(new Date()),
-            });
-          })
-          .catch(error => {
-            throw new Error(error);
+        runInAction(async () => {
+          this.uploadProgress = 0;
+          this.uploadCompleted = true;
+          const downloadUrl = await this.uploadTask.snapshot.ref.getDownloadURL();
+          await this.create({
+            userId,
+            link: downloadUrl,
+            title: this.uploadSongName,
+            hasBeenViewed: false,
+            recipient: null,
+            createdAt: this.rootStore.firebase.firestore.Timestamp.fromDate(new Date()),
           });
+        });
       },
     );
   }
@@ -134,8 +132,9 @@ export default class SharesStore {
         const { userId, ...share } = doc.data();
         return new Share({ id, ...share });
       });
-
-      this.shares.replace(newShares);
+      runInAction(() => {
+        this.shares.replace(newShares);
+      });
     }
   }
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer, inject } from 'mobx-react';
-import { Spinner } from '@blueprintjs/core';
+import { Spin } from 'antd';
 import styled from 'styled-components';
 import AudioPlayer from '@oovui/audio-player-react';
 // import ReactMusicPlayer from 'react-jinke-music-player';
@@ -32,7 +32,9 @@ const View = ({ id, store }) => {
   }, [id, sharesStore]);
 
   return (
-    <Wrapper>{share ? <AudioPlayer url={share.link} title={share.title} /> : <Spinner />}</Wrapper>
+    <Wrapper>
+      {share ? <AudioPlayer url={share.link} title={share.title} /> : <Spin size="large" />}
+    </Wrapper>
   );
 };
 

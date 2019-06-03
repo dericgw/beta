@@ -1,8 +1,8 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Button, Colors, Intent } from '@blueprintjs/core/lib/esm/index';
-import { IconNames } from '@blueprintjs/icons/lib/esm/index';
+import { Button } from 'antd';
+import { Colors } from '@blueprintjs/core/lib/esm/index';
 
 export const StyledDefaultState = styled.div`
   position: relative;
@@ -57,9 +57,9 @@ export const CompletedState = ({ link, fileName, viewShare, id }) => (
     <h4>{fileName}</h4>
     <p>{link}</p>
     <CopyToClipboard text={link}>
-      <Button icon={IconNames.DUPLICATE} />
+      <Button icon="duplicate" />
     </CopyToClipboard>
-    <Button intent={Intent.NONE} icon={IconNames.LINK} onClick={() => viewShare(id)}>
+    <Button icon="link" onClick={() => viewShare(id)}>
       View
     </Button>
   </>

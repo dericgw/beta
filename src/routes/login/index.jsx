@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { inject, observer } from 'mobx-react';
-import noop from 'lodash/noop';
 import { StyledFirebaseAuth } from 'react-firebaseui';
 import { Redirect } from '@reach/router';
 
@@ -17,15 +16,15 @@ const Login = ({ store }) => {
     ],
   };
   const { userStore } = store;
-  let unregisterAuthObserver = useRef(noop);
-  useEffect(() => {
-    unregisterAuthObserver.current = userStore.watchAuthState();
-    return () => {
-      unregisterAuthObserver.current();
-    };
-  });
 
-  return userStore.isAuthed && userStore.attemptAuth ? (
+  useEffect(() => {
+    return () => {
+      userStore.cleanUpWatchAuthState();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return userStore.isAuthed ? (
     <Redirect to="/share" noThrow />
   ) : (
     <StyledFirebaseAuth uiConfig={authConfig} firebaseAuth={firebase.auth()} />

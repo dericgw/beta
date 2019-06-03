@@ -1,4 +1,4 @@
-import { observable, computed } from 'mobx';
+import { observable, computed, runInAction } from 'mobx';
 
 export default class Share {
   @observable id;
@@ -9,12 +9,14 @@ export default class Share {
   @observable createdAt;
 
   constructor({ id, title, recipient, link, hasBeenViewed, createdAt }) {
-    this.id = id;
-    this.title = title;
-    this.recipient = recipient;
-    this.link = link;
-    this.hasBeenViewed = hasBeenViewed;
-    this.createdAt = createdAt;
+    runInAction(() => {
+      this.id = id;
+      this.title = title;
+      this.recipient = recipient;
+      this.link = link;
+      this.hasBeenViewed = hasBeenViewed;
+      this.createdAt = createdAt;
+    });
   }
 
   @computed

@@ -1,29 +1,23 @@
 import { observable, action, computed } from 'mobx';
 import pick from 'lodash/pick';
+import noop from 'lodash/noop';
 
 import User from './models/user';
 
 export default class UserStore {
   @observable user = null;
 
+  cleanUpWatchAuthState = noop;
+
   constructor(rootStore) {
     this.rootStore = rootStore;
     this.auth = this.rootStore.firebase.auth;
+    this.watchAuthState();
   }
 
   @computed
   get isAuthed() {
     return this.user;
-  }
-
-  @action
-  attemptAuth() {
-    const user = this.auth().currentUser;
-    if (user) {
-      this.update(user);
-    }
-
-    return this.isAuthed;
   }
 
   @action
@@ -37,8 +31,8 @@ export default class UserStore {
 
   @action
   watchAuthState() {
-    return this.auth().onAuthStateChanged(user => {
-      if (!!user) {
+    this.cleanUpWatchAuthState = this.auth().onAuthStateChanged(user => {
+      if (user) {
         this.update(user);
       } else {
         this.update(null);

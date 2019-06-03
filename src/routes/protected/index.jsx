@@ -2,9 +2,9 @@ import React, { lazy } from 'react';
 import { Redirect, Router } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 
-import Menu from '../../components/menu';
 import { Main, Sidebar, Wrapper } from '../../layout';
 
+const Menu = lazy(() => import(/* webpackChunkName: "menu" */ '../../components/menu'));
 const Share = lazy(() => import(/* webpackChunkName: "share-routes" */ './share'));
 const Shares = lazy(() =>
   import(/* webpackChunkName: "sidebar.shares" */ '../../components/shares'),

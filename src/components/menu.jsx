@@ -16,7 +16,6 @@ const Opener = styled.span`
   align-items: center;
 `;
 
-// @ContextMenuTarget
 const Menu = () => (
   <Opener>
     <Icon type="menu" />
