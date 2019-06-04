@@ -1,6 +1,6 @@
 workflow "Deploy to Firebase" {
   on = "push"
-  resolves = ["Deploy"]
+  resolves = ["Init Functions"]
 }
 
 action "Install" {
@@ -8,13 +8,14 @@ action "Install" {
   args = "install"
 }
 
-action "Install Functions" {
+action "Init Functions" {
   uses = "nuxt/actions-yarn@master"
+  needs = "Install"
   args = "--cwd ./functions install"
 }
 
 action "Build" {
-  needs = "Install"
+  needs = "Init Functions"
   uses = "nuxt/actions-yarn@master"
   args = "build"
   secrets = ["FIREBASE_TOKEN", "REACT_APP_FIREBASE_API_KEY", "REACT_APP_FIREBASE_AUTH_DOMAIN", "REACT_APP_FIREBASE_DATABASE_URL", "REACT_APP_FIREBASE_PROJECT_ID", "REACT_APP_FIREBASE_MESSAGING_SENDER_ID", "REACT_APP_FIREBASE_STORAGE_BUCKET", "REACT_APP_FIREBASE_APP_ID"]
