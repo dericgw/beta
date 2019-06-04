@@ -8,14 +8,8 @@ action "Install" {
   args = "install"
 }
 
-action "Init Functions" {
-  uses = "nuxt/actions-yarn@master"
-  needs = "Install"
-  args = "--cwd ./functions install"
-}
-
 action "Build" {
-  needs = "Init Functions"
+  needs = "Install"
   uses = "nuxt/actions-yarn@master"
   args = "build"
   secrets = ["FIREBASE_TOKEN", "REACT_APP_FIREBASE_API_KEY", "REACT_APP_FIREBASE_AUTH_DOMAIN", "REACT_APP_FIREBASE_DATABASE_URL", "REACT_APP_FIREBASE_PROJECT_ID", "REACT_APP_FIREBASE_MESSAGING_SENDER_ID", "REACT_APP_FIREBASE_STORAGE_BUCKET", "REACT_APP_FIREBASE_APP_ID"]
@@ -25,7 +19,7 @@ action "Deploy" {
   needs = "Build"
   uses = "w9jds/firebase-action@master"
   secrets = ["FIREBASE_TOKEN"]
-  args = "deploy"
+  args = "deploy --only hosting"
   env = {
     PROJECT_ID = "the-beta-project"
   }
