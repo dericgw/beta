@@ -1,6 +1,6 @@
 workflow "Deploy to Firebase" {
   on = "push"
-  resolves = ["Deploy"]
+  resolves = ["Init Functions"]
 }
 
 action "Install" {
@@ -19,7 +19,7 @@ action "Deploy" {
   needs = "Build"
   uses = "w9jds/firebase-action@master"
   secrets = ["FIREBASE_TOKEN"]
-  args = "deploy"
+  args = "deploy --only hosting"
   env = {
     PROJECT_ID = "the-beta-project"
   }
