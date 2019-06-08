@@ -8,11 +8,6 @@ action "Install" {
   args = "install"
 }
 
-action "Install Functions" {
-  uses = "nuxt/actions-yarn@master"
-  args = "--cwd ./functions install"
-}
-
 action "Build" {
   needs = "Install"
   uses = "nuxt/actions-yarn@master"

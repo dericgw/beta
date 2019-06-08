@@ -3,7 +3,7 @@ import { observable, action, computed, runInAction } from 'mobx';
 import Share from './models/share';
 
 export default class SharesStore {
-  @observable shares = [];
+  @observable shares = observable([]);
   @observable uploadProgress = 0;
   @observable uploadCompleted = false;
   @observable uploadSongName;
@@ -21,6 +21,11 @@ export default class SharesStore {
   @computed
   get shareLink() {
     return `/share/${this.lastShare.id}`;
+  }
+
+  @computed
+  get serializedShares() {
+    return this.shares.toJS();
   }
 
   async fetchById(id) {

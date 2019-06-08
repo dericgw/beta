@@ -1,21 +1,23 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { navigate } from '@reach/router';
 import { List, Button } from 'antd';
 
-const Shares = ({
-  store: {
-    sharesStore: { shares },
-  },
-}) => {
+const Shares = ({ shares }) => {
+  const editShare = id => {
+    navigate(`/share/${id}/edit`);
+  };
+
   return (
     <List
       dataSource={shares}
       loading={!shares}
-      renderItem={({ id, sentTo, title, hasBeenViewed }) => {
+      renderItem={({ id, sentTo, title, hasBeenViewed, created }) => {
         return (
           <List.Item
             key={id}
-            actions={[<Button shape="circle-outline" icon="edit" href={`/share/${id}/edit`} />]}
+            title={created}
+            actions={[<Button shape="circle-outline" icon="form" onClick={() => editShare(id)} />]}
           >
             <List.Item.Meta title={title} description={sentTo} />
           </List.Item>
@@ -25,4 +27,6 @@ const Shares = ({
   );
 };
 
-export default inject('store')(observer(Shares));
+export default inject(({ store }) => ({
+  shares: store.sharesStore.serializedShares,
+}))(observer(Shares));

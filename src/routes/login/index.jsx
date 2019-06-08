@@ -3,10 +3,9 @@ import { inject, observer } from 'mobx-react';
 import { StyledFirebaseAuth } from 'react-firebaseui';
 import { Redirect } from '@reach/router';
 
-const Login = ({ store }) => {
-  const { firebase } = store;
+const Login = ({ firebase, redirectTo, userStore }) => {
   const authConfig = {
-    signInSuccessUrl: '/share',
+    signInSuccessUrl: redirectTo,
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
@@ -15,7 +14,6 @@ const Login = ({ store }) => {
       firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     ],
   };
-  const { userStore } = store;
 
   useEffect(() => {
     return () => {
@@ -31,4 +29,8 @@ const Login = ({ store }) => {
   );
 };
 
-export default inject('store')(observer(Login));
+export default inject(({ store }) => ({
+  userStore: store.userStore,
+  firebase: store.firebase,
+  redirectTo: store.redirectTo,
+}))(observer(Login));

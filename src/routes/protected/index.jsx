@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { lazy, useEffect } from 'react';
 import { Redirect, Router } from '@reach/router';
 import { inject, observer } from 'mobx-react';
 
@@ -10,7 +10,14 @@ const Shares = lazy(() =>
   import(/* webpackChunkName: "sidebar.shares" */ '../../components/shares'),
 );
 
-const ProtectedRoutes = ({ store: { userStore } }) => {
+const ProtectedRoutes = ({ store }) => {
+  const { userStore } = store;
+  useEffect(() => {
+    if (!userStore.isAuthed) {
+      store.updateEntryUrl();
+    }
+  });
+
   return userStore.isAuthed ? (
     <>
       <Menu />

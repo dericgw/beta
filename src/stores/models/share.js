@@ -1,4 +1,5 @@
 import { observable, computed, runInAction } from 'mobx';
+import { format } from 'date-fns';
 
 export default class Share {
   @observable id;
@@ -22,5 +23,10 @@ export default class Share {
   @computed
   get sentTo() {
     return this.recipient ? this.recipient : 'No recipient selected...';
+  }
+
+  @computed
+  get created() {
+    return format(this.createdAt, 'ddd, MMM Do');
   }
 }

@@ -6,8 +6,7 @@ import { Icon } from 'antd';
 
 import { CompletedState, ProgressIndicator, StyledDefaultState } from './styles';
 
-const Create = ({ store }) => {
-  const { userStore, sharesStore } = store;
+const Create = ({ userStore, sharesStore }) => {
   const onDrop = acceptedFiles => {
     sharesStore.upload(acceptedFiles, userStore.user.uid);
   };
@@ -62,4 +61,7 @@ const Create = ({ store }) => {
   );
 };
 
-export default inject('store')(observer(Create));
+export default inject(({ store }) => ({
+  userStore: store.userStore,
+  sharesStore: store.sharesStore,
+}))(observer(Create));
