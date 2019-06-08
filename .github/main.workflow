@@ -11,7 +11,7 @@ action "Install" {
 action "Init Functions" {
   uses = "nuxt/actions-yarn@master"
   needs = "Install"
-  args = "--cwd ./functions install"
+  args = "--cwd ./functions install --ignore-engines"
 }
 
 action "Build" {
