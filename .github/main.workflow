@@ -1,11 +1,17 @@
 workflow "Deploy to Firebase" {
   on = "push"
-  resolves = ["Init Functions"]
+  resolves = ["Deploy"]
 }
 
 action "Install" {
   uses = "nuxt/actions-yarn@master"
   args = "install"
+}
+
+action "Init Functions" {
+  uses = "nuxt/actions-yarn@master"
+  needs = "Install"
+  args = "--cwd ./functions install"
 }
 
 action "Build" {
@@ -16,7 +22,7 @@ action "Build" {
 }
 
 action "Deploy" {
-  needs = "Build"
+  needs = ["Init Functions", "Build"]
   uses = "w9jds/firebase-action@master"
   secrets = ["FIREBASE_TOKEN"]
   args = "deploy --only hosting"
