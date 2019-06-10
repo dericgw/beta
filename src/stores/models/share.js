@@ -27,6 +27,6 @@ export default class Share {
 
   @computed
   get created() {
-    return format(this.createdAt, 'ddd, MMM Do');
+    return format(this.createdAt.seconds, 'ddd, MMM Do');
   }
 }

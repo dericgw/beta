@@ -2,17 +2,25 @@ import React, { useEffect } from 'react';
 import { inject, observer } from 'mobx-react';
 import { StyledFirebaseAuth } from 'react-firebaseui';
 import { Redirect } from '@reach/router';
+import { Typography } from 'antd';
+
+import { Wrapper } from './styles';
+
+const { Title, Paragraph } = Typography;
 
 const Login = ({ firebase, redirectTo, userStore }) => {
   const authConfig = {
-    signInSuccessUrl: redirectTo,
+    signInFlow: 'popup',
     signInOptions: [
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-      firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      firebase.auth.TwitterAuthProvider.PROVIDER_ID,
     ],
+    callbacks: {
+      // Avoid redirects after sign-in.
+      signInSuccessWithAuthResult: () => false,
+    },
   };
 
   useEffect(() => {
@@ -23,9 +31,13 @@ const Login = ({ firebase, redirectTo, userStore }) => {
   }, []);
 
   return userStore.isAuthed ? (
-    <Redirect to="/share" noThrow />
+    <Redirect to={redirectTo} noThrow />
   ) : (
-    <StyledFirebaseAuth uiConfig={authConfig} firebaseAuth={firebase.auth()} />
+    <Wrapper>
+      <Title level={1}>Beta</Title>
+      <Paragraph>Sign in to get started!</Paragraph>
+      <StyledFirebaseAuth uiConfig={authConfig} firebaseAuth={firebase.auth()} />
+    </Wrapper>
   );
 };
 

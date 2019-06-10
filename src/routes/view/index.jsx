@@ -3,8 +3,6 @@ import { observer, inject } from 'mobx-react';
 import { Spin } from 'antd';
 import styled from 'styled-components';
 import AudioPlayer from '@oovui/audio-player-react';
-// import ReactMusicPlayer from 'react-jinke-music-player';
-// import 'react-jinke-music-player/assets/index.css';
 
 const Wrapper = styled.main`
   display: flex;

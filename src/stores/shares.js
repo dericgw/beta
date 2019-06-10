@@ -1,4 +1,5 @@
 import { observable, action, computed, runInAction } from 'mobx';
+import find from 'lodash/find';
 
 import Share from './models/share';
 
@@ -8,6 +9,7 @@ export default class SharesStore {
   @observable uploadCompleted = false;
   @observable uploadSongName;
   @observable lastShare = {};
+  @observable shareToEditId = null;
   uploadTask = null;
 
   constructor(rootStore) {
@@ -27,6 +29,16 @@ export default class SharesStore {
   get serializedShares() {
     return this.shares.toJS();
   }
+
+  @computed
+  get shareToEdit() {
+    return find(this.shares, { id: this.shareToEditId });
+  }
+
+  @action('shares | updateShareToEditId')
+  updateShareToEditId = id => {
+    this.shareToEditId = id;
+  };
 
   async fetchById(id) {
     try {
@@ -49,7 +61,7 @@ export default class SharesStore {
     }
   }
 
-  @action
+  @action('shares | create')
   async create(share) {
     try {
       const { id } = await this.db.collection('songs').add(share);
@@ -59,13 +71,13 @@ export default class SharesStore {
     }
   }
 
-  @action
+  @action('shares | addShare')
   addShare = share => {
     this.lastShare = new Share(share);
     this.shares.push(this.lastShare);
   };
 
-  @action
+  @action('shares | upload')
   upload(files, userId) {
     const storage = this.storage.ref();
     this.uploadCompleted = false;
@@ -95,7 +107,7 @@ export default class SharesStore {
             title: this.uploadSongName,
             hasBeenViewed: false,
             recipient: null,
-            createdAt: this.rootStore.firebase.firestore.Timestamp.fromDate(new Date()),
+            createdAt: new Date(),
           });
         });
       },
@@ -108,22 +120,22 @@ export default class SharesStore {
     }
   }
 
-  @action
+  @action('shares |  updateUploadProgress')
   updateUploadProgress(progress) {
     this.uploadProgress = progress;
   }
 
-  @action
+  @action('shares | updateUploadCompleted')
   updateUploadCompleted(isComplete) {
     this.uploadCompleted = isComplete;
   }
 
-  @action
+  @action('shares | updateUploadSongName')
   updateUploadSongName(name) {
     this.uploadSongName = name;
   }
 
-  @action
+  @action('shares | fetchShares')
   async fetchShares(userId) {
     const shares = await this.db
       .collection('songs')
@@ -142,4 +154,9 @@ export default class SharesStore {
       });
     }
   }
+
+  @action('shares | deleteShare')
+  deleteShare = id => {
+    console.log(id);
+  };
 }

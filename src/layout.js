@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Colors } from '@blueprintjs/core';
+
+import colors from './assets/styles/theme';
 
 export const Wrapper = styled.main`
   display: grid;
@@ -8,8 +9,7 @@ export const Wrapper = styled.main`
 `;
 
 export const Sidebar = styled.aside`
-  padding: 12px;
-  background-color: ${Colors.LIGHT_GRAY5};
+  background-color: ${colors.grey.lightest};
 `;
 
 export const Main = styled.section`

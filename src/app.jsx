@@ -12,7 +12,6 @@ const rootStore = new RootStore(firebase);
 const App = () => {
   useEffect(() => {
     rootStore.updateEntryUrl(window.location.pathname);
-    console.log(rootStore.redirectTo);
   }, []);
 
   return (

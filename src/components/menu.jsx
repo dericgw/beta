@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'antd';
-import { Colors } from '@blueprintjs/core';
+
+import colors from '../assets/styles/theme';
 
 const Opener = styled.span`
   position: absolute;
@@ -10,7 +11,7 @@ const Opener = styled.span`
   height: 42px;
   width: 42px;
   border-radius: 42px;
-  background-color: ${Colors.LIGHT_GRAY4};
+  background-color: ${colors.grey.lightest};
   display: flex;
   justify-content: center;
   align-items: center;

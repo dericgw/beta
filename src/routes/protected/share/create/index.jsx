@@ -6,6 +6,8 @@ import { Icon } from 'antd';
 
 import { CompletedState, ProgressIndicator, StyledDefaultState } from './styles';
 
+const iconStyle = { fontSize: '84px', margin: '24px' };
+
 const Create = ({ userStore, sharesStore }) => {
   const onDrop = acceptedFiles => {
     sharesStore.upload(acceptedFiles, userStore.user.uid);
@@ -40,7 +42,7 @@ const Create = ({ userStore, sharesStore }) => {
             <CompletedState
               link={shareLink}
               fileName={lastShare.title}
-              viewShare={() => navigate(shareLink)}
+              viewShare={() => navigate(shareLink, { state: { id: lastShare.id } })}
             />
           ) : (
             <p>
@@ -49,7 +51,7 @@ const Create = ({ userStore, sharesStore }) => {
             </p>
           )}
           <Icon
-            style={{ fontSize: '84px' }}
+            style={iconStyle}
             type={isDragActive ? 'cloud-upload' : uploadCompleted ? 'save' : 'folder-add'}
           />
           {uploadProgress ? (

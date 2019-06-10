@@ -12,4 +12,9 @@ export default {
   borderRadiusBase: '4px',
   borderColorBase: '#d9d9d9',
   boxShadowBase: '0 2px 8px rgba(0, 0, 0, 0.15)',
+  white: '#ffffff',
+  grey: {
+    lightest: '#F5F8FA',
+    lighter: '#E1E8ED',
+  },
 };

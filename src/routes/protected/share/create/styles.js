@@ -1,8 +1,10 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Button } from 'antd';
-import { Colors } from '@blueprintjs/core/lib/esm/index';
+import { Button, Typography } from 'antd';
+
+import colors from '../../../../assets/styles/theme';
+
+const { Paragraph, Title } = Typography;
 
 export const StyledDefaultState = styled.div`
   position: relative;
@@ -13,8 +15,9 @@ export const StyledDefaultState = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-color: ${({ isDragActive }) => (isDragActive ? Colors.BLUE5 : Colors.LIGHT_GRAY5)};
-  color: ${({ isDragActive }) => (isDragActive ? Colors.WHITE : Colors.DARK_GRAY1)};
+  background-color: ${({ isDragActive }) =>
+    isDragActive ? colors.primaryColor : colors.grey.lightest};
+  color: ${({ isDragActive }) => (isDragActive ? colors.white : colors.textColor)};
 
   h4 {
     margin-bottom: 12px;
@@ -46,7 +49,7 @@ export const ProgressIndicator = styled.div`
   width: ${({ progress }) => `${progress}%`};
   height: ${({ progress }) => `${progress}%`};
   border-radius: 100%;
-  background-color: ${Colors.GREEN5};
+  background-color: ${colors.successColor};
   opacity: 0.3;
   pointer-events: none;
   animation: ${blink} 1s linear infinite;
@@ -54,11 +57,8 @@ export const ProgressIndicator = styled.div`
 
 export const CompletedState = ({ link, fileName, viewShare, id }) => (
   <>
-    <h4>{fileName}</h4>
-    <p>{link}</p>
-    <CopyToClipboard text={link}>
-      <Button icon="duplicate" />
-    </CopyToClipboard>
+    <Title level={4}>{fileName}</Title>
+    <Paragraph copyable>{link}</Paragraph>
     <Button icon="link" onClick={() => viewShare(id)}>
       View
     </Button>

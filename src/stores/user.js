@@ -20,7 +20,7 @@ export default class UserStore {
     return this.user;
   }
 
-  @action
+  @action('user | update')
   update(user) {
     if (!user) {
       this.user = null;
@@ -29,7 +29,7 @@ export default class UserStore {
     }
   }
 
-  @action
+  @action('user | watchAuthState')
   watchAuthState() {
     this.cleanUpWatchAuthState = this.auth().onAuthStateChanged(user => {
       if (user) {
